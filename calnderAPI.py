@@ -1,18 +1,25 @@
 from __future__ import print_function
+
 import datetime
 import os.path
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
+
+import pytz
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-import datetime
-import pytz
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-MONTHS = ['january','february','march','april','may','june','july','august','september','october','november','december']
-DAYS = ['monday','tuesday','wendnesday','thursday','friday','saturday','sunday']
-DAY_EXTENTIONS = ['st','nd','th','rd']
+
+MONTHS = ['january', 'february', 'march', 'april', 'may', 'june',
+          'july', 'august', 'september', 'october', 'november', 'december']
+
+DAYS = ['monday', 'tuesday', 'wendnesday',
+        'thursday', 'friday', 'saturday', 'sunday']
+
+DAY_EXTENTIONS = ['st', 'nd', 'th', 'rd']
+
 
 def authenticate_google():
     """Shows basic usage of the Google Calendar API.
@@ -37,21 +44,20 @@ def authenticate_google():
             token.write(creds.to_json())
 
     service = build('calendar', 'v3', credentials=creds)
-    return service 
+    return service
 
 
-def get_events(day,service):
+def get_events(day, service):
     # Call the Calendar API
-    date = datetime.datetime.combine(day,datetime.datetime.min.time())
-    end_date = datetime.datetime.combine(day,datetime.datetime.max.time())
+    date = datetime.datetime.combine(day, datetime.datetime.min.time())
+    end_date = datetime.datetime.combine(day, datetime.datetime.max.time())
     utc = pytz.UTC
     date = date.astimezone(utc)
     end_date = end_date.astimezone(utc)
 
-
-    events_result = service.events().list(calendarId='primary', timeMin=date.isoformat(),timeMax=end_date.isoformat(),
-                                             singleEvents=True,
-                                            orderBy='startTime').execute()
+    events_result = service.events().list(calendarId='primary', timeMin=date.isoformat(), timeMax=end_date.isoformat(),
+                                          singleEvents=True,
+                                          orderBy='startTime').execute()
     events = events_result.get('items', [])
 
     if not events:
@@ -77,7 +83,8 @@ def get_date(text):
         if word in MONTHS:
             month = MONTHS.index(word) + 1
         elif word in DAYS:
-            day_of_week = DAYS.index(word) #0-6 as datetime liberary stamp the days from monday with 0 
+            # 0-6 as datetime liberary stamp the days from monday with 0
+            day_of_week = DAYS.index(word)
         elif word.isdigit():
             day = int(word)
         else:
@@ -89,7 +96,8 @@ def get_date(text):
                     except:
                         pass
 
-    if month < today.month and month != -1:  # if the month mentioned is before the current month set the year to the next
+    # if the month mentioned is before the current month set the year to the next
+    if month < today.month and month != -1:
         year = year+1
 
     if month == -1 and day != -1:  # if we didn't find a month, but we have a day
@@ -110,12 +118,10 @@ def get_date(text):
 
         return today + datetime.timedelta(dif)
 
-    if day != -1:  
+    if day != -1:
         return datetime.date(month=month, day=day, year=year)
-
-
 
 
 service = authenticate_google()
 text = 'what do i have on september 4th '
-print(get_events(get_date(text=text),service=service))
+print(get_events(get_date(text=text), service=service))
