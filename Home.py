@@ -60,10 +60,13 @@ while True:
                 city = waitforaudio()
                 say_print("for how many days you wanna know its weather?")
                 days_num = waitforaudio()
-                days_num.split(' ')
+                days_num = days_num.split(" ")
                 for z in days_num:
                     if z.isdigit():
                         daynum = z
+                        break
+
                 temp_data = wz.get_waether_condition(city)
-                for i in range(daynum):
+                for i in range(int(daynum)):
+                    print(temp_data)
                     say_print(temp_data[i])
