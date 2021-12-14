@@ -59,13 +59,24 @@ def get_events(day, service):
                                           singleEvents=True,
                                           orderBy='startTime').execute()
     events = events_result.get('items', [])
-
+    status = []
+    count = 0
     if not events:
-        print('No upcoming events found.')
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
+        status.insert(0,"No upcoming events found.")   
+        return status
 
+    for event in events:
+        count +=1
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        start_time = str(start.split("T")[1].split("+")[0].split(":")[0])
+        if int(start_time) < 12:
+            start_time = start_time + " am"
+        else:
+            start_time = str(int(start_time)-12)
+            start_time = start_time + " pm"
+
+        status.insert(count ,(start_time, event['summary']))
+    return status
 
 def get_date(text):
     text = text.lower()
@@ -122,6 +133,4 @@ def get_date(text):
         return datetime.date(month=month, day=day, year=year)
 
 
-service = authenticate_google()
-text = 'what do i have on september 4th '
-print(get_events(get_date(text=text), service=service))
+
