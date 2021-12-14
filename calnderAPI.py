@@ -68,11 +68,11 @@ def get_events(day, service):
     for event in events:
         count +=1
         start = event['start'].get('dateTime', event['start'].get('date'))
-        start_time = str(start.split("T")[1].split("+")[0])
-        start_time = str(start_time.split(":")[0]) + ":" +str(start_time.split(":")[1])
-        if int(start_time.split(":")[0]) < 12:
+        start_time = str(start.split("T")[1].split("+")[0].split(":")[0])
+        if int(start_time) < 12:
             start_time = start_time + " am"
         else:
+            start_time = str(int(start_time)-12)
             start_time = start_time + " pm"
 
         status.insert(count ,(start_time, event['summary']))

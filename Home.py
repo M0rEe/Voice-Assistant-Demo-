@@ -5,7 +5,7 @@ import weather as wz
 import calnderAPI as cal
 
 
-mail_str = ["send an email", "send email",
+mail_str    = ["send an email", "send email",
             "send mail", "send a mail",
             "can you mail","can you email"]
 
@@ -16,8 +16,10 @@ weather_str = ["what about the weather", "how is the weather",
             "is it cold","is it warm",
             "is it hot","is it raining"]
 
-calendar = ["what do i have",
+calendar    = ["what do i have","do i have plans"
             "am i busy on"]
+
+Exit        = ["exit","bye","see you later"]
 
 
 
@@ -47,21 +49,28 @@ def waitforaudio():
 
 # Start
 wake_up = "hey google"
-print("Started\n")
+print("Started.")
 service = cal.authenticate_google()
 
 while True:
-    print("im listening.\n")
+    print("im listening.")
     wake_command = waitforaudio()
+    if wake_command == 'exit':
+        print("Stopped")
+        break 
     if wake_command.count(wake_up) > 0:
-        say_print("Welcome , you can start talking to your voice assistant now.\n")
+        say_print("Welcome , you can start talking to your voice assistant now.")
         textcommand = waitforaudio()
+        if textcommand == 'exit':
+            print("Stopped")
+            break 
         for phrase in calendar :
             if phrase in textcommand:
                 date = cal.get_date(textcommand)
-                say_print("you have on")
-                say_print(date)
                 events = cal.get_events(date,service)
+                if not events[0] == 'No upcoming events found.':
+                    say_print(f'you have {len(events)} events on {date}')
+
                 for event in events: 
                     say_print(event)
 
