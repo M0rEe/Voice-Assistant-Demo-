@@ -25,7 +25,7 @@ def get_waether_condition(city):
     days = []
     nights = []
     descr = []
-    Day_data = ['', '', '', '', '', '', '', '']
+    Day_data = []
     for i in data2['daily']:
         # As the given data from the api isin kelvin and celsius = kelvin - 273.15
         days.append(round(i['temp']['day']-273.15, 2))
@@ -38,17 +38,20 @@ def get_waether_condition(city):
     # formating the output to make the tts more accurate
     phrase = f'{city} - forecast\n'
 
-    for i in range(len(days)):
-        if i == 0:
-            phrase += f'\nDay {i+1} (Today)\n'
-        elif i == 1:
-            phrase += f'\nDay {i+1} (Tomorrow)\n'
+    for j in range(len(days)):
+        if j == 0:
+            phrase += f'\nDay {j+1} (Today)\n'
+        elif j == 1:
+            phrase += f'\nDay {j+1} (Tomorrow)\n'
         else:
-            phrase += f'\nDay {i+1}\n'
+            phrase += f'\nDay {j+1}\n'
 
-        phrase += 'Day temprature is ' + str(days[i]) + '°C\n'
-        phrase += 'Night temprature is ' + str(nights[i]) + '°C\n'
-        phrase += 'Sky Condition is ' + str(descr[i]) + '\n'
-        Day_data[i] += phrase
+        phrase += 'Day temprature is ' + str(days[j]) + '°C\n'
+        phrase += 'Night temprature is ' + str(nights[j]) + '°C\n'
+        phrase += 'Sky Condition is ' + str(descr[j]) + '\n'
+        Day_data.insert(j,phrase)
         phrase = ""
-        return Day_data
+
+    return Day_data
+
+

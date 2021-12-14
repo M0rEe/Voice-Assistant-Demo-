@@ -68,5 +68,4 @@ while True:
 
                 temp_data = wz.get_waether_condition(city)
                 for i in range(int(daynum)):
-                    print(temp_data)
                     say_print(temp_data[i])
