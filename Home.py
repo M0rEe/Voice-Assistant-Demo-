@@ -54,14 +54,22 @@ def waitforaudio():
 # Start
 wake_up = "hey google"
 print("Started.")
+#getting user google credentials file for the calnder commands
 service = cal.authenticate_google()
+
+flag_exit = False
 
 while True:
     print("im listening.")
     wake_command = waitforaudio()
-    if wake_command == 'exit':
-        print("Stopped")
-        break 
+    for ext in Exit:
+        if ext in wake_command :
+            print("Stopped")
+            flag_exit = True
+            break 
+    if flag_exit:
+        break
+
     if wake_command.count(wake_up) > 0:
         say_print("Welcome ,")
         textcommand = waitforaudio()
