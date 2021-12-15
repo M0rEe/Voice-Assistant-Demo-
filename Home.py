@@ -3,6 +3,7 @@ import pyttsx3  # importing text to speech module
 import SendMail as sm
 import weather as wz
 import calnderAPI as cal
+import pywhatkit as kit
 
 
 mail_str    = ["send an email", "send email",
@@ -20,6 +21,9 @@ calendar    = ["what do i have","do i have plans"
             "am i busy on"]
 
 Exit        = ["exit","bye","see you later"]
+
+search          = ["search on youtube","play a video from youtube",
+                "i want to listen to","can you search for me"]
 
 
 
@@ -59,7 +63,7 @@ while True:
         print("Stopped")
         break 
     if wake_command.count(wake_up) > 0:
-        say_print("Welcome , you can start talking to your voice assistant now.")
+        say_print("Welcome ,")
         textcommand = waitforaudio()
         if textcommand == 'exit':
             print("Stopped")
@@ -79,19 +83,19 @@ while True:
                 say_print("to whom you want me to sent this email ?,i prefer to write down the email you want")
                 to = input()
                 if to !="":
-                    say_print("what do you want to be the subject of this email ?\n")
+                    say_print("what do you want to be the subject of this email ?")
                     subject = waitforaudio()
-                    say_print("what do you want me to write in this email ?\n")
+                    say_print("what do you want me to write in this email ?")
                     body = waitforaudio()
                     auth = sm.send_mail_to(to, subject, body)
                     say_print(auth)
 
         for phrase in weather_str:
             if phrase in textcommand:
-                say_print("what city do you want to know its weather?\n")
+                say_print("what city do you want to know its weather?")
                 city = waitforaudio()
                 city = city.split(' ')
-                say_print("for how many days you wanna know its weather ? note : Maximum 8 days\n")
+                say_print("for how many days you wanna know its weather ? note : Maximum 8 days.")
                 days_num = waitforaudio()
                 days_num = days_num.split(" ")
                 for z in days_num:
@@ -102,3 +106,11 @@ while True:
                 temp_data = wz.get_waether_condition(city[0])
                 for i in range(int(daynum)):
                     say_print(temp_data[i])
+
+
+        for phrase in search:
+            if phrase in textcommand:
+                say_print("what video you want me to search for on youtube ?")
+                title = waitforaudio()
+                kit.playonyt(title)
+
