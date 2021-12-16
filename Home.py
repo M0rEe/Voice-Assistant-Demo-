@@ -6,9 +6,9 @@ import weather as wz
 import calnderAPI as cal
 
 import pywhatkit as kit
-import datetime 
+import datetime
 import pyautogui as gui
-
+import pyjokes
 
 import re
 import random as rr
@@ -77,42 +77,47 @@ LANGUAGES = {
     'cy': 'welsh'
 }
 
-mail_str    = ["send an email", "send email",
+mail_str = ["send an email", "send email",
             "send mail", "send a mail",
-            "can you mail","can you email"]
+            "can you mail", "can you email"]
 weather_str = ["what about the weather", "how is the weather",
-            "what is the forecast", "what is the weather", 
-            "how about the weather", "what is the temprature",
-            "should i take my umbrella", "what is the weather forecast",
-            "is it cold","is it warm",
-            "is it hot","is it raining"]
+               "what is the forecast", "what is the weather",
+               "how about the weather", "what is the temprature",
+               "should i take my umbrella", "what is the weather forecast",
+               "is it cold", "is it warm",
+               "is it hot", "is it raining"]
 
-calendar = ["what do i have","do i have plans","am i busy on"]
+calendar = ["what do i have", "do i have plans", "am i busy on"]
 
-Exit = ["exit","bye","see you later"]
+Exit = ["exit", "bye", "see you later"]
 
-rand_number=["pick a random number","choose a random number","random number","tell me any random number"]
+rand_number = ["pick a random number", "choose a random number",
+               "random number", "tell me any random number"]
 
-translator =["how do i say","translate"]
+translator = ["how do i say", "translate"]
 
-shots       = ["screenshot","take a screen","shot the screen"]
+shots = ["screenshot", "take a screen", "shot the screen"]
 
-search      = ["search on youtube","play a video from youtube",
-                "i want to listen to","can you search for me"]
+joke = ["tell me a joke", "tell me something funny", "make me laugh"]
 
-time_ask    =["what time is it","do you have the time",
-            "have you got the time","what is the time"] 
+search = ["search on youtube", "play a video from youtube",
+          "i want to listen to", "can you search for me"]
+
+time_ask = ["what time is it", "do you have the time",
+            "have you got the time", "what is the time"]
+
 
 def greetings():
     hour = int(datetime.datetime.now().hour)
-    if hour>= 0 and hour<12:
+    if hour >= 0 and hour < 12:
         say_print("Good Morning !")
-  
-    elif hour>= 12 and hour<18:
-        say_print("Good Afternoon !")  
-  
+
+    elif hour >= 12 and hour < 18:
+        say_print("Good Afternoon !")
+
     else:
-        say_print("Good Evening !") 
+        say_print("Good Evening !")
+
 
 def say_print(textstr):
     engine = pyttsx3.init()  # initializing text to speech module to start synthesizing texts
@@ -120,13 +125,15 @@ def say_print(textstr):
     engine.runAndWait()
     print(textstr)
 
-def translate_from_english(text,Lang):
-    translater=Translator()
-    out=translater.translate(text.strip(),dest=Lang)
+
+def translate_from_english(text, Lang):
+    translater = Translator()
+    out = translater.translate(text.strip(), dest=Lang)
     print(out)
-    out_audio = gTTS(text=out.text,lang=Lang)
+    out_audio = gTTS(text=out.text, lang=Lang)
     out_audio.save("temp.mp3")
     os.system("temp.mp3")
+
 
 def waitforaudio():
     r = sr.Recognizer()  # starting SR module to be able to recognize user "Human" voice
@@ -148,44 +155,52 @@ def waitforaudio():
 # Start
 wake_up = "hey google"
 print("Started.")
-#getting user google credentials file for the calnder commands
+# getting user google credentials file for the calnder commands
 service = cal.authenticate_google()
 counter = 00
 flag_exit = False
-time2 = str(datetime.datetime.now().hour) +":"+ str(datetime.datetime.now().minute)
+time2 = str(datetime.datetime.now().hour) + ":" + \
+    str(datetime.datetime.now().minute)
+
 while True:
     print("im listening.")
     wake_command = waitforaudio()
+
     for ext in Exit:
-        if ext in wake_command :
+        if ext in wake_command:
             print("Stopped")
             flag_exit = True
-            break 
+            break
+
     if flag_exit:
         break
 
     if wake_command.count(wake_up) > 0:
         greetings()
         textcommand = waitforaudio()
+
         if textcommand == 'exit':
             print("Stopped")
-            break 
-        for phrase in calendar :
+            break
+
+        for phrase in calendar:
             if phrase in textcommand:
                 date = cal.get_date(textcommand)
-                events = cal.get_events(date,service)
+                events = cal.get_events(date, service)
                 if not events[0] == 'No upcoming events found.':
                     say_print(f'you have {len(events)} events on {date}')
 
-                for event in events: 
+                for event in events:
                     say_print(event)
 
         for phrase in mail_str:
             if phrase in textcommand:
-                say_print("to whom you want me to sent this email ?,i prefer to write down the email you want")
+                say_print(
+                    "to whom you want me to sent this email ?,i prefer to write down the email you want")
                 to = input()
-                if to !="":
-                    say_print("what do you want to be the subject of this email ?")
+                if to != "":
+                    say_print(
+                        "what do you want to be the subject of this email ?")
                     subject = waitforaudio()
                     say_print("what do you want me to write in this email ?")
                     body = waitforaudio()
@@ -197,7 +212,8 @@ while True:
                 say_print("what city do you want to know its weather?")
                 city = waitforaudio()
                 city = city.split(' ')
-                say_print("for how many days you wanna know its weather ? note : Maximum 8 days.")
+                say_print(
+                    "for how many days you wanna know its weather ? note : Maximum 8 days.")
                 days_num = waitforaudio()
                 days_num = days_num.split(" ")
                 for z in days_num:
@@ -209,15 +225,12 @@ while True:
                 for i in range(int(daynum)):
                     say_print(temp_data[i])
 
-
-
         for phrase in search:
             if phrase in textcommand:
                 say_print("what video you want me to search for on youtube ?")
                 title = waitforaudio()
                 kit.playonyt(title)
 
-        
         for phrase in time_ask:
             if phrase in textcommand:
                 say_print(f'time now is {time2}')
@@ -227,15 +240,17 @@ while True:
                 screenshot = gui.screenshot()
                 screenshot.save(f'./screenshot{counter}.png')
                 counter += 1
-                say_print(f"i took a screenshot as you said and sasved it to the project folder with the name screenshot{counter}.png")
+                say_print(
+                    f"i took a screenshot as you said and sasved it to the project folder with the name screenshot{counter}.png")
 
         for phrase in rand_number:
             if phrase in textcommand:
-                if re.search("\d+\s\D+\s\d+",textcommand) !=None :
-                    temp=re.search("\d+\s\D+\s\d+",textcommand).group().split()
-                    say_print(rr.randint(int(temp[0]),int(temp[2])))
+                if re.search("\d+\s\D+\s\d+", textcommand) != None:
+                    temp = re.search(
+                        "\d+\s\D+\s\d+", textcommand).group().split()
+                    say_print(rr.randint(int(temp[0]), int(temp[2])))
                     break
-                say_print(rr.randint(0,1000))
+                say_print(rr.randint(0, 1000))
                 break
 
         for phrase in translator:
@@ -243,14 +258,12 @@ while True:
                 for j in LANGUAGES:
                     if LANGUAGES[j] in textcommand:
                         textcommand.replace(phrase, '')
-                        textcommand= textcommand[0:len(textcommand)-len(LANGUAGES[j])-4]
-                        translate_from_english(str(textcommand),str(j))
+                        textcommand = textcommand[0:len(
+                            textcommand)-len(LANGUAGES[j])-4]
+                        translate_from_english(str(textcommand), str(j))
                         break
                 break
 
-
-
-
-
-
-
+        for phrase in joke:
+            if phrase in textcommand:
+                say_print(pyjokes.get_joke())
