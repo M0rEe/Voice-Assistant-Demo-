@@ -1,4 +1,3 @@
-from typing import Counter
 import speech_recognition as sr  # importing speech recognition module
 import pyttsx3  # importing text to speech module
 import SendMail as sm
@@ -16,6 +15,9 @@ import random as rr
 import os
 from googletrans import Translator
 from gtts import gTTS
+
+#you can solve the mutli time say hey google with flag to keep him hearing in a loop 
+#its not the best solution but can do the thing 
 
 
 LANGUAGES = {
@@ -106,6 +108,16 @@ search = ["search on youtube", "play a video from youtube",
 time_ask = ["what time is it", "do you have the time",
             "have you got the time", "what is the time"]
 
+definitions  = ["what are you", "who are you",
+             "introduce yourself","who created you",
+             "your name","may i have your name"]
+settingslst = ["change setting" , "change settings",
+                "edit settings","modify settings"]
+
+comms = ["what can you do" , "what is your things",
+         "i bet you can't do","what's your commands"]
+             
+program_name = "Dave"
 
 def greetings():
     hour = int(datetime.datetime.now().hour)
@@ -119,8 +131,8 @@ def greetings():
         say_print("Good Evening !")
 
 
+engine = pyttsx3.init()  # initializing text to speech module to start synthesizing texts
 def say_print(textstr):
-    engine = pyttsx3.init()  # initializing text to speech module to start synthesizing texts
     engine.say(textstr)
     engine.runAndWait()
     print(textstr)
@@ -134,6 +146,12 @@ def translate_from_english(text, Lang):
     out_audio.save("temp.mp3")
     os.system("temp.mp3")
 
+def change_settings():
+    voices = engine.getProperty('voices')
+    if  engine.getProperty('voice') == voices[0].id :       #getting details of current voice
+        engine.setProperty('voice', voices[1].id)   #changing index, changes voices. o for male
+    else:
+        engine.setProperty('voice', voices[0].id)   #changing index, changes voices. 1 for female
 
 def waitforaudio():
     r = sr.Recognizer()  # starting SR module to be able to recognize user "Human" voice
@@ -146,7 +164,7 @@ def waitforaudio():
             # testing
         except Exception:
             # handling the miss hearing of the user if he didn't talk
-            print("I think I miss heard you a little bit.\n")
+            print("I think I miss heard you a little bit.")
             # print("Exception " + str(e))
 
     return text.lower()
@@ -161,27 +179,29 @@ counter = 00
 flag_exit = False
 time2 = str(datetime.datetime.now().hour) + ":" + \
     str(datetime.datetime.now().minute)
+loop_handler = 0
 
 while True:
-    print("im listening.")
-    wake_command = waitforaudio()
-
-    for ext in Exit:
-        if ext in wake_command:
-            print("Stopped")
-            flag_exit = True
-            break
+    if loop_handler == 0:
+        print("im listening.")
+        wake_command = waitforaudio()
 
     if flag_exit:
         break
 
-    if wake_command.count(wake_up) > 0:
-        greetings()
-        textcommand = waitforaudio()
+    if wake_command.count(wake_up) > 0 or loop_handler == 1:
+        if loop_handler == 0:
+            loop_handler = 1
+            greetings()
+        else:
+            print("awating commands")
 
-        if textcommand == 'exit':
-            print("Stopped")
-            break
+        textcommand = waitforaudio()
+        for phrase in Exit:
+            if phrase in textcommand :
+                print("Stopped")
+                flag_exit = True
+                break
 
         for phrase in calendar:
             if phrase in textcommand:
@@ -241,7 +261,7 @@ while True:
                 screenshot.save(f'./screenshot{counter}.png')
                 counter += 1
                 say_print(
-                    f"i took a screenshot as you said and sasved it to the project folder with the name screenshot{counter}.png")
+                    f"i took a screenshot as you said and saved it to the project folder with the name screenshot{counter}.png")
 
         for phrase in rand_number:
             if phrase in textcommand:
@@ -267,3 +287,31 @@ while True:
         for phrase in joke:
             if phrase in textcommand:
                 say_print(pyjokes.get_joke())
+
+        for phrase in definitions:
+            if phrase in textcommand:
+                say_print(f"my name is {program_name} and iam an voice assistant made for dsp project in 2021 with some simple commands ")
+        
+
+        for phrase in comms:
+            if phrase in textcommand:
+                say_print(' 1 i can send an email for you. \n\
+                            2 i can tell you how is the weather forecast for some days. \n\
+                            3 i can play music on youtube. \n\
+                            4 i can read your events on google calender. \n\
+                            5 i can tell you a joke. \n\
+                            6 i can translate. \n\
+                            7 i can role arandom number. \n\
+                            8 i can take ascreenshot of your screen when you say u want **\n\
+                            9 you can edit some settings in my code.')
+
+        for phrase in settingslst:
+            if phrase in textcommand:
+                say_print("what settings do you want me to change for you ? ")
+                changes = waitforaudio()
+                if "your name" in changes:
+                    say_print("What do you want to call me?")
+                    program_name = waitforaudio()
+                elif "your gender" in changes:
+                    change_settings()
+                    say_print("is this tone better for now ?")
