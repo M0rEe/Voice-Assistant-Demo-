@@ -17,6 +17,7 @@ the project is still under developing
 some libs you need to install before trying run the project 
 
 ///////////////////////////////*PRE_REQUISITE*//////////////////////////////////////
+
 pip install SpeechRecognition
 
 pip install pipwin
