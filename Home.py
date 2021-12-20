@@ -16,8 +16,6 @@ import os
 from googletrans import Translator
 from gtts import gTTS
 
-#you can solve the mutli time say hey google with flag to keep him hearing in a loop 
-#its not the best solution but can do the thing 
 
 
 LANGUAGES = {
@@ -116,7 +114,7 @@ settingslst = ["change setting" , "change settings",
 
 comms = ["what can you do" , "what is your things",
          "i bet you can't do","what's your commands"]
-             
+
 program_name = "Dave"
 
 def greetings():
@@ -209,7 +207,7 @@ while True:
                 events = cal.get_events(date, service)
                 if not events[0] == 'No upcoming events found.':
                     say_print(f'you have {len(events)} events on {date}')
-
+                say_print(date)
                 for event in events:
                     say_print(event)
 
@@ -315,3 +313,6 @@ while True:
                 elif "your gender" in changes:
                     change_settings()
                     say_print("is this tone better for now ?")
+
+
+    

@@ -17,7 +17,6 @@ def send_mail_to(to_email,subject,body):
         server.login(EMAILADDRESS, PASSWORD)
         print("logged in ...")
         server.send_message(msg)
-        print(f"email sent to {msg['To']}")
         return f"email sent to {msg['To']}"
     except smtplib.SMTPAuthenticationError:
         print("Error logging in")
