@@ -47,6 +47,8 @@ def authenticate_google():
     return service
 
 
+
+
 def get_events(day, service):
     # Call the Calendar API
     date = datetime.datetime.combine(day, datetime.datetime.min.time())
@@ -131,6 +133,3 @@ def get_date(text):
 
     if day != -1:
         return datetime.date(month=month, day=day, year=year)
-
-
-
