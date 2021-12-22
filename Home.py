@@ -86,11 +86,12 @@ weather_str = ["what about the weather", "how is the weather",
                "should i take my umbrella", "what is the weather forecast",
                "is it cold", "is it warm",
                "is it hot", "is it raining"]
+
 calendar = ["what do i have", "do i have plans", "am i busy on"]
 Exit = ["exit", "bye", "see you later"]
 rand_number = ["pick a random number", "choose a random number",
                "random number", "tell me any random number"]
-translator = ["how do i say", "translate"]
+translator = ["how do i say", "translate","how can i say"]
 shots = ["screenshot", "take a screen snip", "shot the screen"]
 joke = ["tell me a joke", "tell me something funny", "make me laugh"]
 search = ["search on youtube", "play a video from youtube",
@@ -131,7 +132,7 @@ def say_print(textstr):
 def translate_from_english(text, Lang):
     translater = Translator()
     out = translater.translate(text.strip(), dest=Lang)
-    print(out)
+    print(out.text)
     out_audio = gTTS(text=out.text, lang=Lang)
     out_audio.save("temp.mp3")
     os.system("temp.mp3")
@@ -268,8 +269,7 @@ while True:
         for phrase in rand_number:
             if phrase in textcommand:
                 if re.search("\d+\s\D+\s\d+", textcommand) != None:
-                    temp = re.search(
-                        "\d+\s\D+\s\d+", textcommand).group().split()
+                    temp = re.search("\d+\s\D+\s\d+", textcommand).group().split()
                     say_print(rr.randint(int(temp[0]), int(temp[2])))
                     break
                 say_print(rr.randint(0, 1000))
@@ -279,9 +279,8 @@ while True:
             if phrase in textcommand:
                 for j in LANGUAGES:
                     if LANGUAGES[j] in textcommand:
-                        textcommand.replace(phrase, '')
-                        textcommand = textcommand[0:len(
-                            textcommand)-len(LANGUAGES[j])-4]
+                        textcommand=textcommand.replace(phrase, '')
+                        textcommand = textcommand[0:len(textcommand)-len(LANGUAGES[j])-4]
                         translate_from_english(str(textcommand), str(j))
                         break
                 break
