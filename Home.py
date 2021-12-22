@@ -14,7 +14,9 @@ from random import choice
 import os
 from googletrans import Translator
 from gtts import gTTS
-
+import sounddevice as sd
+from scipy.io.wavfile import write
+import wavio as wv
 
 
 ######################### Region Definition ################################
@@ -86,17 +88,20 @@ weather_str = ["what about the weather", "how is the weather",
                "should i take my umbrella", "what is the weather forecast",
                "is it cold", "is it warm",
                "is it hot", "is it raining"]
+
 calendar = ["what do i have", "do i have plans", "am i busy on"]
 Exit = ["exit", "bye", "see you later"]
 rand_number = ["pick a random number", "choose a random number",
                "random number", "tell me any random number"]
-translator = ["how do i say", "translate"]
+translator = ["how do i say", "translate","how can i say"]
 shots = ["screenshot", "take a screen snip", "shot the screen"]
 joke = ["tell me a joke", "tell me something funny", "make me laugh"]
 search = ["search on youtube", "play a video from youtube",
           "i want to listen to", "can you search for me"]
+google = ["i want to search on google","search on google"]
 random_music = ["turn some music","play songs","play a song","I want to listen to some songs"]
 stopmusic_msg = ["stop now","stop it","it's okey","stop"]
+record=["record now","record","record something","i want to record"]
 time_ask = ["what time is it", "do you have the time",
             "have you got the time", "what is the time"]
 definitions  = ["what are you", "who are you",
@@ -131,7 +136,7 @@ def say_print(textstr):
 def translate_from_english(text, Lang):
     translater = Translator()
     out = translater.translate(text.strip(), dest=Lang)
-    print(out)
+    print(out.text)
     out_audio = gTTS(text=out.text, lang=Lang)
     out_audio.save("temp.mp3")
     os.system("temp.mp3")
@@ -254,6 +259,26 @@ while True:
             if phrase in textcommand:
                pygame.mixer.music.stop()
 
+        for phrase in record:
+            if phrase in textcommand:
+                freq = 44100 #Sampling frequency
+                duration = 60 #Recording duration
+                say_print("you can record for 1 min,sir")
+                say_print("start now")
+                recording = sd.rec(int(duration * freq),samplerate=freq, channels=2)
+                # Record audio for the given number of seconds
+                sd.wait()
+                wv.write("recording1.wav", recording, freq, sampwidth=2)
+                print("Done")
+
+        for phrase in google:
+            if phrase in textcommand:
+                say_print("what do you want to search about?")
+                title = waitforaudio()
+                # Displaying the text that we want to search
+                print(f"Searching for the query : {title}")
+                kit.search(title)
+
         for phrase in time_ask:
             if phrase in textcommand:
                 say_print(f'time now is {time2}')
@@ -269,8 +294,7 @@ while True:
         for phrase in rand_number:
             if phrase in textcommand:
                 if re.search("\d+\s\D+\s\d+", textcommand) != None:
-                    temp = re.search(
-                        "\d+\s\D+\s\d+", textcommand).group().split()
+                    temp = re.search("\d+\s\D+\s\d+", textcommand).group().split()
                     say_print(rr.randint(int(temp[0]), int(temp[2])))
                     break
                 say_print(rr.randint(0, 1000))
@@ -280,9 +304,8 @@ while True:
             if phrase in textcommand:
                 for j in LANGUAGES:
                     if LANGUAGES[j] in textcommand:
-                        textcommand.replace(phrase, '')
-                        textcommand = textcommand[0:len(
-                            textcommand)-len(LANGUAGES[j])-4]
+                        textcommand=textcommand.replace(phrase, '')
+                        textcommand = textcommand[0:len(textcommand)-len(LANGUAGES[j])-4]
                         translate_from_english(str(textcommand), str(j))
                         break
                 break

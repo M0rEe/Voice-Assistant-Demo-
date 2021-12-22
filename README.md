@@ -40,5 +40,4 @@ pip install gTTS
 
 pip install  pyjokes
 
-pip install googletranslate
-
+pip install googletrans==3.1.0a0
