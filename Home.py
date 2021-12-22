@@ -96,7 +96,7 @@ rand_number = ["pick a random number", "choose a random number",
 
 translator = ["how do i say", "translate"]
 
-shots = ["screenshot", "take a screen", "shot the screen"]
+shots = ["screenshot", "take a screen snip", "shot the screen"]
 
 joke = ["tell me a joke", "tell me something funny", "make me laugh"]
 
@@ -109,8 +109,9 @@ time_ask = ["what time is it", "do you have the time",
 definitions  = ["what are you", "who are you",
              "introduce yourself","who created you",
              "your name","may i have your name"]
-settingslst = ["change setting" , "change settings",
-                "edit settings","modify settings"]
+
+settingslst = ["change setting" ,"edit settings",
+                "modify settings"]
 
 comms = ["what can you do" , "what is your things",
          "i bet you can't do","what's your commands"]
@@ -195,6 +196,7 @@ while True:
             print("awating commands")
 
         textcommand = waitforaudio()
+
         for phrase in Exit:
             if phrase in textcommand :
                 print("Stopped")
@@ -257,9 +259,9 @@ while True:
             if phrase in textcommand:
                 screenshot = gui.screenshot()
                 screenshot.save(f'./screenshot{counter}.png')
-                counter += 1
                 say_print(
                     f"i took a screenshot as you said and saved it to the project folder with the name screenshot{counter}.png")
+                counter += 1
 
         for phrase in rand_number:
             if phrase in textcommand:
@@ -299,8 +301,8 @@ while True:
                             4 i can read your events on google calender. \n\
                             5 i can tell you a joke. \n\
                             6 i can translate. \n\
-                            7 i can role arandom number. \n\
-                            8 i can take ascreenshot of your screen when you say u want **\n\
+                            7 i can role a random number. \n\
+                            8 i can take a screenshot of your screen when you say u want **\n\
                             9 you can edit some settings in my code.')
 
         for phrase in settingslst:
