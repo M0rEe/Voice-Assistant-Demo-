@@ -4,28 +4,22 @@ import pyttsx3  # importing text to speech module
 import SendMail as sm
 import weather as wz
 import calnderAPI as cal
-
 import pywhatkit as kit
 import datetime
 import pyautogui as gui
 import pyjokes
-
 import re
 import random as rr
 from random import choice
-
-#import playsound
 import os
 from googletrans import Translator
 from gtts import gTTS
 
-#you can solve the mutli time say hey google with flag to keep him hearing in a loop 
-#its not the best solution but can do the thing
 
+
+######################### Region Definition ################################
 pygame.mixer.init()
 Music_list=["sway.mp3","Love Me Like You Do.mp3","Perfect.mp3","No Promises.mp3","Its You.mp3","Easy On Me.mp3","Someone Like You.mp3","Hello.mp3"]
-
-
 LANGUAGES = {
     'af': 'afrikaans',
     'ar': 'arabic',
@@ -82,9 +76,7 @@ LANGUAGES = {
     'uk': 'ukrainian',
     'ur': 'urdu',
     'vi': 'vietnamese',
-    'cy': 'welsh'
-}
-
+    'cy': 'welsh'}
 mail_str = ["send an email", "send email",
             "send mail", "send a mail",
             "can you mail", "can you email"]
@@ -94,40 +86,28 @@ weather_str = ["what about the weather", "how is the weather",
                "should i take my umbrella", "what is the weather forecast",
                "is it cold", "is it warm",
                "is it hot", "is it raining"]
-
 calendar = ["what do i have", "do i have plans", "am i busy on"]
-
 Exit = ["exit", "bye", "see you later"]
-
 rand_number = ["pick a random number", "choose a random number",
                "random number", "tell me any random number"]
-
 translator = ["how do i say", "translate"]
-
 shots = ["screenshot", "take a screen snip", "shot the screen"]
-
 joke = ["tell me a joke", "tell me something funny", "make me laugh"]
-
 search = ["search on youtube", "play a video from youtube",
           "i want to listen to", "can you search for me"]
-
 random_music = ["turn some music","play songs","play a song","I want to listen to some songs"]
 stopmusic_msg = ["stop now","stop it","it's okey","stop"]
-
 time_ask = ["what time is it", "do you have the time",
             "have you got the time", "what is the time"]
-
 definitions  = ["what are you", "who are you",
              "introduce yourself","who created you",
              "your name","may i have your name"]
-
 settingslst = ["change setting" ,"edit settings",
                 "modify settings"]
-
 comms = ["what can you do" , "what is your things",
-         "i bet you can't do","what's your commands"]
-             
+         "i bet you can't do","what's your commands"]           
 program_name = "Dave"
+################################ EndRegion ################################
 
 def greetings():
     hour = int(datetime.datetime.now().hour)
@@ -265,7 +245,8 @@ while True:
             if phrase in textcommand:
                 say_print("Here you go with music")
                 Song = choice(Music_list)
-                pygame.mixer.music.load(Song)
+                pygame.mixer.music.load('./music/'+Song)
+                pygame.mixer.music.set_volume(20)
                 pygame.mixer.music.play()
 
         for phrase in stopmusic_msg:
