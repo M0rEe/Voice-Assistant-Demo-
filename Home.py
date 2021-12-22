@@ -14,7 +14,9 @@ from random import choice
 import os
 from googletrans import Translator
 from gtts import gTTS
-
+import sounddevice as sd
+from scipy.io.wavfile import write
+import wavio as wv
 
 
 ######################### Region Definition ################################
@@ -95,8 +97,10 @@ shots = ["screenshot", "take a screen snip", "shot the screen"]
 joke = ["tell me a joke", "tell me something funny", "make me laugh"]
 search = ["search on youtube", "play a video from youtube",
           "i want to listen to", "can you search for me"]
+google = ["i want to search on google","search on google"]
 random_music = ["turn some music","play songs","play a song","I want to listen to some songs"]
 stopmusic_msg = ["stop now","stop it","it's okey","stop"]
+record=["record now","record","record something","i want to record"]
 time_ask = ["what time is it", "do you have the time",
             "have you got the time", "what is the time"]
 definitions  = ["what are you", "who are you",
@@ -252,6 +256,26 @@ while True:
         for phrase in stopmusic_msg:
             if phrase in textcommand:
                pygame.mixer.music.stop()
+
+        for phrase in record:
+            if phrase in textcommand:
+                freq = 44100 #Sampling frequency
+                duration = 60 #Recording duration
+                say_print("you can record for 1 min,sir")
+                say_print("start now")
+                recording = sd.rec(int(duration * freq),samplerate=freq, channels=2)
+                # Record audio for the given number of seconds
+                sd.wait()
+                wv.write("recording1.wav", recording, freq, sampwidth=2)
+                print("Done")
+
+        for phrase in google:
+            if phrase in textcommand:
+                say_print("what do you want to search about?")
+                title = waitforaudio()
+                # Displaying the text that we want to search
+                print(f"Searching for the query : {title}")
+                kit.search(title)
 
         for phrase in time_ask:
             if phrase in textcommand:
