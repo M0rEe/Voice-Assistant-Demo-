@@ -1,3 +1,4 @@
+import pygame as pygame
 import speech_recognition as sr  # importing speech recognition module
 import pyttsx3  # importing text to speech module
 import SendMail as sm
@@ -11,13 +12,18 @@ import pyjokes
 
 import re
 import random as rr
+from random import choice
+
 #import playsound
 import os
 from googletrans import Translator
 from gtts import gTTS
 
 #you can solve the mutli time say hey google with flag to keep him hearing in a loop 
-#its not the best solution but can do the thing 
+#its not the best solution but can do the thing
+
+pygame.mixer.init()
+Music_list=["sway.mp3","Love Me Like You Do.mp3","Perfect.mp3","No Promises.mp3","Its You.mp3","Easy On Me.mp3","Someone Like You.mp3","Hello.mp3"]
 
 
 LANGUAGES = {
@@ -104,6 +110,9 @@ joke = ["tell me a joke", "tell me something funny", "make me laugh"]
 
 search = ["search on youtube", "play a video from youtube",
           "i want to listen to", "can you search for me"]
+
+random_music = ["turn some music","play songs","play a song","I want to listen to some songs"]
+stopmusic_msg = ["stop now","stop it","it's okey","stop"]
 
 time_ask = ["what time is it", "do you have the time",
             "have you got the time", "what is the time"]
@@ -209,7 +218,6 @@ while True:
                 events = cal.get_events(date, service)
                 if not events[0] == 'No upcoming events found.':
                     say_print(f'you have {len(events)} events on {date}')
-
                 for event in events:
                     say_print(event)
 
@@ -250,6 +258,17 @@ while True:
                 say_print("what video you want me to search for on youtube ?")
                 title = waitforaudio()
                 kit.playonyt(title)
+
+        for phrase in random_music:
+            if phrase in textcommand:
+                say_print("Here you go with music")
+                Song = choice(Music_list)
+                pygame.mixer.music.load(Song)
+                pygame.mixer.music.play()
+
+        for phrase in stopmusic_msg:
+            if phrase in textcommand:
+               pygame.mixer.music.stop()
 
         for phrase in time_ask:
             if phrase in textcommand:
@@ -301,8 +320,8 @@ while True:
                             4 i can read your events on google calender. \n\
                             5 i can tell you a joke. \n\
                             6 i can translate. \n\
-                            7 i can role arandom number. \n\
-                            8 i can take ascreenshot of your screen when you say u want **\n\
+                            7 i can role a random number. \n\
+                            8 i can take a screenshot of your screen when you say u want **\n\
                             9 you can edit some settings in my code.')
 
         for phrase in settingslst:
