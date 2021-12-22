@@ -19,7 +19,7 @@ from gtts import gTTS
 
 ######################### Region Definition ################################
 pygame.mixer.init()
-Music_list=["sway.mp3","Love Me Like You Do.mp3","Perfect.mp3","No Promises.mp3","Its You.mp3","Easy On Me.mp3","Someone Like You.mp3","Hello.mp3"]
+#Music_list=["sway.mp3","Love Me Like You Do.mp3","Perfect.mp3","No Promises.mp3","Its You.mp3","Easy On Me.mp3","Someone Like You.mp3","Hello.mp3"]
 LANGUAGES = {
     'af': 'afrikaans',
     'ar': 'arabic',
@@ -170,6 +170,7 @@ flag_exit = False
 time2 = str(datetime.datetime.now().hour) + ":" + \
     str(datetime.datetime.now().minute)
 loop_handler = 0
+entries = os.listdir('./music')
 
 while True:
     if loop_handler == 0:
@@ -244,7 +245,7 @@ while True:
         for phrase in random_music:
             if phrase in textcommand:
                 say_print("Here you go with music")
-                Song = choice(Music_list)
+                Song = choice(entries)
                 pygame.mixer.music.load('./music/'+Song)
                 pygame.mixer.music.set_volume(20)
                 pygame.mixer.music.play()
@@ -305,7 +306,9 @@ while True:
                             6 i can translate. \n\
                             7 i can role a random number. \n\
                             8 i can take a screenshot of your screen when you say u want **\n\
-                            9 you can edit some settings in my code.')
+                            9 you can edit some settings in my code.\n\
+                            10 i can play some random music if you put the .mp3 in music file \n\
+                            11 i can tell you what time is it.')
 
         for phrase in settingslst:
             if phrase in textcommand:
