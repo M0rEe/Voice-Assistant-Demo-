@@ -88,7 +88,6 @@ weather_str = ["what about the weather", "how is the weather",
                "should i take my umbrella", "what is the weather forecast",
                "is it cold", "is it warm",
                "is it hot", "is it raining"]
-
 calendar = ["what do i have", "do i have plans", "am i busy on"]
 Exit = ["exit", "bye", "see you later"]
 rand_number = ["pick a random number", "choose a random number",
