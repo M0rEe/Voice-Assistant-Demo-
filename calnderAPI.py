@@ -37,7 +37,7 @@ def authenticate_google():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'client_secret_36550645333-pdcdk5muf7cio78j2n9s82dshasddapu.apps.googleusercontent.com.json', SCOPES)
+                'goolgle-credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.json', 'w') as token:

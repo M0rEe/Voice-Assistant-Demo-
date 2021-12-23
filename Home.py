@@ -4,7 +4,7 @@ import pyttsx3  # importing text to speech module
 import SendMail as sm
 import weather as wz
 import calnderAPI as cal
-import pywhatkit as kit
+import pywhatkit as kit  # requires internet connection
 import datetime
 import pyautogui as gui
 import pyjokes
@@ -21,7 +21,6 @@ import wavio as wv
 
 ######################### Region Definition ################################
 pygame.mixer.init()
-#Music_list=["sway.mp3","Love Me Like You Do.mp3","Perfect.mp3","No Promises.mp3","Its You.mp3","Easy On Me.mp3","Someone Like You.mp3","Hello.mp3"]
 LANGUAGES = {
     'af': 'afrikaans',
     'ar': 'arabic',
@@ -92,26 +91,28 @@ calendar = ["what do i have", "do i have plans", "am i busy on"]
 Exit = ["exit", "bye", "see you later"]
 rand_number = ["pick a random number", "choose a random number",
                "random number", "tell me any random number"]
-translator = ["how do i say", "translate","how can i say"]
+translator = ["how do i say", "translate", "how can i say"]
 shots = ["screenshot", "take a screen snip", "shot the screen"]
 joke = ["tell me a joke", "tell me something funny", "make me laugh"]
 search = ["search on youtube", "play a video from youtube",
           "i want to listen to", "can you search for me"]
-google = ["i want to search on google","search on google"]
-random_music = ["turn some music","play songs","play a song","I want to listen to some songs"]
-stopmusic_msg = ["stop now","stop it","it's okey","stop"]
-record=["record now","record","record something","i want to record"]
+google = ["i want to search on google", "search on google"]
+random_music = ["turn some music", "play songs",
+                "play a song", "I want to listen to some songs"]
+stopmusic_msg = ["stop now", "stop it", "it's okey", "stop"]
+record = ["record now", "record", "record something", "i want to record"]
 time_ask = ["what time is it", "do you have the time",
             "have you got the time", "what is the time"]
-definitions  = ["what are you", "who are you",
-             "introduce yourself","who created you",
-             "your name","may i have your name"]
-settingslst = ["change setting" ,"edit settings",
-                "modify settings"]
-comms = ["what can you do" , "what is your things",
-         "i bet you can't do","what's your commands"]           
+definitions = ["what are you", "who are you",
+               "introduce yourself", "who created you",
+               "your name", "may i have your name"]
+settingslst = ["change setting", "edit settings",
+               "modify settings"]
+comms = ["what can you do", "what is your things",
+         "i bet you can't do", "what's your commands"]
 program_name = "Dave"
 ################################ EndRegion ################################
+
 
 def greetings():
     hour = int(datetime.datetime.now().hour)
@@ -126,6 +127,8 @@ def greetings():
 
 
 engine = pyttsx3.init()  # initializing text to speech module to start synthesizing texts
+
+
 def say_print(textstr):
     engine.say(textstr)
     engine.runAndWait()
@@ -140,12 +143,17 @@ def translate_from_english(text, Lang):
     out_audio.save("temp.mp3")
     os.system("temp.mp3")
 
+
 def change_settings():
     voices = engine.getProperty('voices')
-    if  engine.getProperty('voice') == voices[0].id :       #getting details of current voice
-        engine.setProperty('voice', voices[1].id)   #changing index, changes voices. o for male
+    # getting details of current voice
+    if engine.getProperty('voice') == voices[0].id:
+        # changing index, changes voices. o for male
+        engine.setProperty('voice', voices[1].id)
     else:
-        engine.setProperty('voice', voices[0].id)   #changing index, changes voices. 1 for female
+        # changing index, changes voices. 1 for female
+        engine.setProperty('voice', voices[0].id)
+
 
 def waitforaudio():
     r = sr.Recognizer()  # starting SR module to be able to recognize user "Human" voice
@@ -169,7 +177,8 @@ wake_up = "hey google"
 print("Started.")
 # getting user google credentials file for the calnder commands
 service = cal.authenticate_google()
-counter = 00
+counter = 0
+counter2 = 0
 flag_exit = False
 time2 = str(datetime.datetime.now().hour) + ":" + \
     str(datetime.datetime.now().minute)
@@ -194,7 +203,7 @@ while True:
         textcommand = waitforaudio()
 
         for phrase in Exit:
-            if phrase in textcommand :
+            if phrase in textcommand:
                 print("Stopped")
                 flag_exit = True
                 break
@@ -249,25 +258,33 @@ while True:
         for phrase in random_music:
             if phrase in textcommand:
                 say_print("Here you go with music")
-                Song = choice(entries)
-                pygame.mixer.music.load('./music/'+Song)
-                pygame.mixer.music.set_volume(20)
-                pygame.mixer.music.play()
+                if len(entries) : 
+                    Song = choice(entries)
+                    say_print(Song)
+                    pygame.mixer.music.load('./music/'+Song)
+                    pygame.mixer.music.set_volume(0.4)
+                    pygame.mixer.music.play()
+                else:
+                    say_print("you dont have any .mp3 music in the folder")
 
         for phrase in stopmusic_msg:
             if phrase in textcommand:
-               pygame.mixer.music.stop()
+                pygame.mixer.music.stop()
 
         for phrase in record:
             if phrase in textcommand:
-                freq = 44100 #Sampling frequency
-                duration = 60 #Recording duration
+                freq = 44100  # Sampling frequency
+                duration = 60  # Recording duration
                 say_print("you can record for 1 min,sir")
                 say_print("start now")
-                recording = sd.rec(int(duration * freq),samplerate=freq, channels=2)
+                recording = sd.rec(int(duration * freq),
+                                   samplerate=freq, channels=2)
                 # Record audio for the given number of seconds
                 sd.wait()
-                wv.write("recording1.wav", recording, freq, sampwidth=2)
+
+                wv.write(f"recording{counter2}.wav",
+                         recording, freq, sampwidth=2)
+                counter2 += 1
                 print("Done")
 
         for phrase in google:
@@ -293,7 +310,8 @@ while True:
         for phrase in rand_number:
             if phrase in textcommand:
                 if re.search("\d+\s\D+\s\d+", textcommand) != None:
-                    temp = re.search("\d+\s\D+\s\d+", textcommand).group().split()
+                    temp = re.search(
+                        "\d+\s\D+\s\d+", textcommand).group().split()
                     say_print(rr.randint(int(temp[0]), int(temp[2])))
                     break
                 say_print(rr.randint(0, 1000))
@@ -303,8 +321,9 @@ while True:
             if phrase in textcommand:
                 for j in LANGUAGES:
                     if LANGUAGES[j] in textcommand:
-                        textcommand=textcommand.replace(phrase, '')
-                        textcommand = textcommand[0:len(textcommand)-len(LANGUAGES[j])-4]
+                        textcommand = textcommand.replace(phrase, '')
+                        textcommand = textcommand[0:len(
+                            textcommand)-len(LANGUAGES[j])-4]
                         translate_from_english(str(textcommand), str(j))
                         break
                 break
@@ -315,8 +334,8 @@ while True:
 
         for phrase in definitions:
             if phrase in textcommand:
-                say_print(f"my name is {program_name} and iam an voice assistant made for dsp project in 2021 with some simple commands ")
-        
+                say_print(
+                    f"my name is {program_name} and iam an voice assistant made for dsp project in 2021 with some simple commands ")
 
         for phrase in comms:
             if phrase in textcommand:
